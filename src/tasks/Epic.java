@@ -1,16 +1,30 @@
-package Tasks;
+package tasks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
 
-    private String status;
     private final List<Integer> subTasksIds = new ArrayList<>();
     private final List<Integer> unfinishedTasksIds = new ArrayList<>();
 
-    public Epic(String title, String description) {
-        super(title, description, "NEW");
+    public Epic(String title, String description, int id) {
+        super(title, description, "NEW", id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return subTasksIds.equals(epic.subTasksIds) && unfinishedTasksIds.equals(epic.unfinishedTasksIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subTasksIds, unfinishedTasksIds);
     }
 
     @Override
@@ -34,16 +48,8 @@ public class Epic extends Task {
         return subTasksIds;
     }
 
-    public void refreshStatus() {
-        if (subTasksIds.size() == unfinishedTasksIds.size()) {
-            this.status = "NEW";
-
-        } else if (unfinishedTasksIds.size() > 0) {
-            this.status = "IN PROGRESS";
-
-        } else {
-            this.status = "DONE";
-        }
+    public List<Integer> getUnfinishedTasksIds() {
+        return unfinishedTasksIds;
     }
 
     public void assignNewSubtask(int id, String subTaskStatus) {
@@ -51,17 +57,19 @@ public class Epic extends Task {
         if (!subTaskStatus.equals("DONE")) {
             unfinishedTasksIds.add(id);
         }
-        refreshStatus();
     }
 
     public void removeSubTask(int id) {
         subTasksIds.remove((Integer) id);
         unfinishedTasksIds.remove((Integer) id);
-        refreshStatus();
     }
 
     public void removeAllSubtasks() {
         subTasksIds.clear();
         unfinishedTasksIds.clear();
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

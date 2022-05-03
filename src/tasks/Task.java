@@ -1,21 +1,19 @@
-package Tasks;
+package tasks;
 
 import java.util.Objects;
 
 public class Task {
 
-    // Поля названия и описания сделаны финальными, т.к. не меняются без замены задачи.
-    // Смена id предусмотрена для реализации замены уже существующей задачи.
     protected final String title;
     protected final String description;
-    protected final String status;
+    protected String status;
     protected int id;
 
-    public Task(String title, String description, String status) {
+    public Task(String title, String description, String status, int id) {
         this.title = title;
         this.description = description;
         this.status = status;
-        this.id = hashCode();
+        this.id = id;
     }
 
     @Override
@@ -25,12 +23,13 @@ public class Task {
         Task task = (Task) o;
         return id == task.id
                 && title.equals(task.title)
-                && description.equals(task.description);
+                && description.equals(task.description)
+                && status.equals(task.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, description);
+        return Objects.hash(title, description, status, id);
     }
 
     @Override
