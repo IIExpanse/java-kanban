@@ -9,8 +9,8 @@ public class Epic extends Task {
     private final List<Integer> subTasksIds = new ArrayList<>();
     private final List<Integer> unfinishedTasksIds = new ArrayList<>();
 
-    public Epic(String title, String description, int id) {
-        super(title, description, "NEW", id);
+    public Epic(String title, String description) {
+        super(title, description, "NEW");
     }
 
     @Override
@@ -53,6 +53,10 @@ public class Epic extends Task {
     }
 
     public void assignNewSubtask(int id, String subTaskStatus) {
+        if (subTasksIds.contains(id)) {
+            removeSubTask(id);
+        }
+
         subTasksIds.add(id);
         if (!subTaskStatus.equals("DONE")) {
             unfinishedTasksIds.add(id);
@@ -62,11 +66,6 @@ public class Epic extends Task {
     public void removeSubTask(int id) {
         subTasksIds.remove((Integer) id);
         unfinishedTasksIds.remove((Integer) id);
-    }
-
-    public void removeAllSubtasks() {
-        subTasksIds.clear();
-        unfinishedTasksIds.clear();
     }
 
     public void setStatus(String status) {

@@ -7,13 +7,12 @@ public class Task {
     protected final String title;
     protected final String description;
     protected String status;
-    protected int id;
+    protected Integer id;
 
-    public Task(String title, String description, String status, int id) {
+    public Task(String title, String description, String status) {
         this.title = title;
         this.description = description;
         this.status = status;
-        this.id = id;
     }
 
     @Override
@@ -21,7 +20,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id
+        return Objects.equals(id, task.id)
                 && title.equals(task.title)
                 && description.equals(task.description)
                 && status.equals(task.status);
@@ -47,7 +46,7 @@ public class Task {
                 '}';
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
