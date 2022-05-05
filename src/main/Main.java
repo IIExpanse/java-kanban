@@ -3,7 +3,7 @@ package main;
 import manager.Manager;
 import tasks.*;
 
-import java.util.Map;
+import java.util.List;
 
 public class Main {
 
@@ -13,36 +13,43 @@ public class Main {
 
         makeNewTestTasks();
 
-        printTaskList(manager.getGeneralTasksList());
+        printTaskList(manager.getTasksList());
         printTaskList(manager.getEpicsList());
         printTaskList(manager.getSubTasksList());
 
         printTaskList(manager.getEpicSubTasksList(3));
 
-        manager.clearRegularTasksList();
-        manager.clearEpicTasksList();
+        manager.clearTasksList();
+        manager.clearEpicsList();
         manager.clearSubTasksList();
         makeNewTestTasks();
 
-        printTask(manager.getRegularTaskById(8));
-        printTask(manager.getRegularTaskById(1234));
-        printTask(manager.getEpicTaskById(10));
-        printTask(manager.getEpicTaskById(1234));
+        printTask(manager.getTaskById(8));
+        printTask(manager.getTaskById(1234));
+        printTask(manager.getEpicById(10));
+        printTask(manager.getEpicById(1234));
         printTask(manager.getSubTaskById(11));
         printTask(manager.getSubTaskById(1234));
 
-        Task newTask = new Task("New_title", "New_description", "DONE");
-        manager.addNewTask(newTask);
+        Task task = new Task("Task_title", "Task_description", "DONE");
+        manager.addNewTask(task);
+        Epic epic = new Epic("Epic_title", "Epic_description");
+        manager.addNewEpic(epic);
+        SubTask subTask = new SubTask("SubTask_title", "SubTask_description",
+                "NEW", epic.getId());
+        manager.addNewSubTask(subTask);
 
-        manager.replaceTask(8, newTask);
+        manager.replaceTask(8, task);
+        manager.replaceEpic(10, epic);
+        manager.replaceSubTask(11, subTask);
 
-        manager.removeRegularTask(8);
-        manager.removeEpicTask(10);
+        manager.removeTask(8);
+        manager.removeEpic(10);
         manager.removeSubTask(11);
 
         printTaskList(manager.getEpicsList());
-        SubTask subTask = new SubTask("New_title", "New_description", "DONE", 13);
-        manager.replaceTask(14, subTask);
+        SubTask newSubTask = new SubTask("New_title", "New_description", "DONE", 13);
+        manager.replaceSubTask(14, newSubTask);
         printTaskList(manager.getEpicsList());
     }
 
@@ -60,23 +67,23 @@ public class Main {
 
 
         epicTask = new Epic("Третий спринт", "Закрыть ТЗ третьего спринта");
-        manager.addNewTask(epicTask);
+        manager.addNewEpic(epicTask);
 
         subTask = new SubTask("Тестовые данные", "Сделать тестовые задачи для трекера",
                 "DONE", epicTask.getId());
-        manager.addNewTask(subTask);
+        manager.addNewSubTask(subTask);
 
         subTask = new SubTask("Тест функций", "Оно работает?",
                 "IN_PROGRESS", epicTask.getId());
-        manager.addNewTask(subTask);
+        manager.addNewSubTask(subTask);
 
 
         epicTask = new Epic("Конец модуля", "Закрыть последний спринт");
-        manager.addNewTask(epicTask);
+        manager.addNewEpic(epicTask);
 
         subTask = new SubTask("Теоретическая часть", "Начать делать тренажер",
                 "NEW", epicTask.getId());
-        manager.addNewTask(subTask);
+        manager.addNewSubTask(subTask);
     }
 
     public static void printTask(Task task) {
@@ -84,9 +91,9 @@ public class Main {
         System.out.println();
     }
 
-    public static void printTaskList(Map<Integer, ? extends Task> map) {
+    public static void printTaskList(List<? extends Task> list) {
 
-        for (Task printableTask : map.values()) {
+        for (Task printableTask : list) {
             System.out.println(printableTask);
             System.out.println();
         }
