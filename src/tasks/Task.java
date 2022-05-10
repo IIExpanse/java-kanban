@@ -6,10 +6,10 @@ public class Task {
 
     protected final String title;
     protected final String description;
-    protected String status;
+    protected TaskStatuses status;
     protected Integer id;
 
-    public Task(String title, String description, String status) {
+    public Task(String title, String description, TaskStatuses status) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -50,7 +50,7 @@ public class Task {
         return id;
     }
 
-    public String getStatus() {
+    public TaskStatuses getStatus() {
         return status;
     }
 

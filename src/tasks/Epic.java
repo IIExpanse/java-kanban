@@ -10,7 +10,7 @@ public class Epic extends Task {
     private final List<Integer> unfinishedTasksIds = new ArrayList<>();
 
     public Epic(String title, String description) {
-        super(title, description, "NEW");
+        super(title, description, TaskStatuses.NEW);
     }
 
     @Override
@@ -52,13 +52,13 @@ public class Epic extends Task {
         return unfinishedTasksIds;
     }
 
-    public void assignNewSubtask(int id, String subTaskStatus) {
+    public void assignNewSubtask(int id, TaskStatuses subTaskStatus) {
         if (subTasksIds.contains(id)) {
             removeSubTask(id);
         }
 
         subTasksIds.add(id);
-        if (!subTaskStatus.equals("DONE")) {
+        if (!subTaskStatus.equals(TaskStatuses.DONE)) {
             unfinishedTasksIds.add(id);
         }
     }
@@ -68,7 +68,7 @@ public class Epic extends Task {
         unfinishedTasksIds.remove((Integer) id);
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatuses status) {
         this.status = status;
     }
 }
