@@ -14,46 +14,51 @@ public class Main {
 
         makeNewTestTasks();
 
-        printTaskList(taskManager.getTasksList());
-        printTaskList(taskManager.getEpicsList());
-        printTaskList(taskManager.getSubTasksList());
-
-        printTaskList(taskManager.getEpicSubTasksList(3));
-
-        taskManager.clearTasksList();
-        taskManager.clearEpicsList();
-        taskManager.clearSubTasksList();
-        makeNewTestTasks();
-
-        printTask(taskManager.getTask(8));
+        taskManager.getTask(1);
+        System.out.println("Вызов истории из 1 задачи:");
         printTaskList(taskManager.getHistory());
 
-        printTask(taskManager.getEpic(10));
+        taskManager.getEpic(3);
+        taskManager.getSubTask(4);
+        System.out.println("-------------------------");
+        System.out.println("Вызов истории из 3 задач:");
         printTaskList(taskManager.getHistory());
 
-        printTask(taskManager.getSubTask(11));
+        taskManager.getTask(2);
+        taskManager.getSubTask(5);
+        taskManager.getSubTask(6);
+        taskManager.getEpic(7);
+        System.out.println("-------------------------");
+        System.out.println("Вызов истории из 7 задач:");
         printTaskList(taskManager.getHistory());
 
-        Task task = new Task("Task_title", "Task_description", TaskStatuses.DONE);
-        taskManager.addNewTask(task);
-        Epic epic = new Epic("Epic_title", "Epic_description");
-        taskManager.addNewEpic(epic);
-        SubTask subTask = new SubTask("SubTask_title", "SubTask_description",
-                TaskStatuses.NEW, epic.getId());
-        taskManager.addNewSubTask(subTask);
+        taskManager.getTask(1);
+        System.out.println("-------------------------");
+        System.out.println("Вызов истории из 7 задач, 1 (id 1) вызвана повторно:");
+        printTaskList(taskManager.getHistory());
 
-        taskManager.replaceTask(8, task);
-        taskManager.replaceEpic(10, epic);
-        taskManager.replaceSubTask(11, subTask);
+        taskManager.getEpic(7);
+        taskManager.getSubTask(4);
+        taskManager.getTask(1);
+        System.out.println("-------------------------");
+        System.out.println("Вызов истории из 7 задач, 3 (id 1,4,7) вызваны повторно:");
+        printTaskList(taskManager.getHistory());
 
-        taskManager.removeTask(8);
-        taskManager.removeEpic(10);
-        taskManager.removeSubTask(11);
+        taskManager.removeTask(1);
+        System.out.println("-------------------------");
+        System.out.println("Вызов истории из 6 задач, 1 (id 1) удалена:");
+        printTaskList(taskManager.getHistory());
 
-        printTaskList(taskManager.getEpicsList());
-        SubTask newSubTask = new SubTask("New_title", "New_description", TaskStatuses.DONE, 13);
-        taskManager.replaceSubTask(14, newSubTask);
-        printTaskList(taskManager.getEpicsList());
+        taskManager.removeEpic(3);
+        System.out.println("-------------------------");
+        System.out.println("Вызов истории из 2 задач, 1 (id 3) эпик удален, " +
+                            "\n 3 сабтаски (id 4, 5, 6) из эпика должны удалиться по умолчанию:");
+        printTaskList(taskManager.getHistory());
+
+        taskManager.removeEpic(31);
+        System.out.println("-------------------------");
+        System.out.println("Попытка удалить (в т.ч. из истории) несуществующую задачу:");
+        printTaskList(taskManager.getHistory());
     }
 
     public static void makeNewTestTasks() {
@@ -61,32 +66,38 @@ public class Main {
         Epic epicTask;
         SubTask subTask;
 
+        // id 1
         task = new Task("Thinking in Java", "Прочитать теорию",
                 TaskStatuses.IN_PROGRESS);
         taskManager.addNewTask(task);
 
+        // id 2
         task = new Task("C++", "Начать изучать", TaskStatuses.NEW);
         taskManager.addNewTask(task);
 
-
+        // id 3
         epicTask = new Epic("Третий спринт", "Закрыть ТЗ третьего спринта");
         taskManager.addNewEpic(epicTask);
 
+        // id 4
         subTask = new SubTask("Тестовые данные", "Сделать тестовые задачи для трекера",
                 TaskStatuses.DONE, epicTask.getId());
         taskManager.addNewSubTask(subTask);
 
+        // id 5
         subTask = new SubTask("Тест функций", "Оно работает?",
                 TaskStatuses.IN_PROGRESS, epicTask.getId());
         taskManager.addNewSubTask(subTask);
 
-
-        epicTask = new Epic("Конец модуля", "Закрыть последний спринт");
-        taskManager.addNewEpic(epicTask);
-
+        // id 6
         subTask = new SubTask("Теоретическая часть", "Начать делать тренажер",
                 TaskStatuses.NEW, epicTask.getId());
         taskManager.addNewSubTask(subTask);
+
+        // id 7
+        epicTask = new Epic("Конец модуля", "Закрыть последний спринт");
+        taskManager.addNewEpic(epicTask);
+
     }
 
     public static void printTask(Task task) {
