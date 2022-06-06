@@ -15,10 +15,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, SubTask> subTasksList = new HashMap<>();
     private int idCounter = 1;
 
-    private int assignNewId() {
-        return idCounter++;
-    }
-
     @Override
     public List<Task> getTasksList() {
         return new ArrayList<>(tasksList.values());
@@ -85,7 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask getSubTask(int id) {
-       SubTask subTask = subTasksList.get(id);
+        SubTask subTask = subTasksList.get(id);
 
         historyManager.add(subTask);
         return subTask;
@@ -195,5 +191,9 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epicsList.get(parentEpicId).setStatus(TaskStatuses.DONE);
         }
+    }
+
+    private int assignNewId() {
+        return idCounter++;
     }
 }

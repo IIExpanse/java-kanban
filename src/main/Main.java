@@ -100,11 +100,6 @@ public class Main {
 
     }
 
-    public static void printTask(Task task) {
-        System.out.println(task);
-        System.out.println();
-    }
-
     public static void printTaskList(List<? extends Task> list) {
 
         for (Task printableTask : list) {

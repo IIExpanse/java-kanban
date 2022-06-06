@@ -9,13 +9,8 @@ import java.util.Map;
 
 public class CustomLinkedList {
     private final Map<Integer, Node<Task>> map = new HashMap<>();
-    private Node<Task> head = null;
-    private Node<Task> tail = null;
-    private int size = 0;
-
-    public int size() {
-        return this.size;
-    }
+    private Node<Task> head;
+    private Node<Task> tail;
 
     public void addTask(Task task) {
         if (task != null) {
@@ -29,7 +24,42 @@ public class CustomLinkedList {
 
             linkLast(newNode);
             map.put(taskId, newNode);
-            size++;
+        }
+    }
+
+    public List<Task> getTasks() {
+        List<Task> list = new ArrayList<>();
+        Node<Task> nextNode = head;
+
+        while (nextNode != null) {
+            list.add(nextNode.data);
+            nextNode = nextNode.next;
+        }
+        return list;
+    }
+
+    public void removeNode(int taskId) {
+        this.removeNode(map.get(taskId));
+    }
+
+    private void removeNode(Node<Task> node) {
+        if (node != null) {
+            if (node.prev != null) {
+                node.prev.next = node.next;
+            } else {
+                head = node.next;
+            }
+
+            if (node.next != null) {
+                node.next.prev = node.prev;
+            } else {
+                tail = node.prev;
+            }
+
+            map.remove(node.data.getId());
+            node.prev = null;
+            node.data = null;
+            node.next = null;
         }
     }
 
@@ -42,42 +72,4 @@ public class CustomLinkedList {
         }
         tail = newNode;
     }
-
-    public List<Task> getTasks() {
-        List<Task> list = new ArrayList<>();
-        Node<Task> nextNode = tail;
-
-        while (nextNode != null) {
-            list.add(nextNode.data); // Такой перебор по двусвязному списку (вместо простого перебора значений мапы)
-            nextNode = nextNode.prev; // реализован, чтобы в возвращаемом списке они расположились по порядку просмотра.
-        }
-        return list;
-    }
-
-    public void removeNode(int taskId) {
-        this.removeNode(map.get(taskId));
-    }
-
-    private void removeNode(Node<Task> node) {
-            if (node != null) {
-                if (node.prev != null) {
-                    node.prev.next = node.next;
-                } else {
-                    head = node.next;
-                }
-
-                if (node.next != null) {
-                    node.next.prev = node.prev;
-                } else {
-                    tail = node.prev;
-                }
-
-                map.remove(node.data.getId());
-                node.prev = null;
-                node.data = null;
-                node.next = null;
-                size--;
-            }
-    }
-
 }
