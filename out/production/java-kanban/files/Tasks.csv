@@ -1,0 +1,10 @@
+id,type,name,status,description,epic
+3,EPIC,Третий спринт,IN_PROGRESS,Закрыть ТЗ третьего спринта
+6,EPIC,Конец модуля,NEW,Закрыть последний спринт
+4,SUBTASK,Тестовые данные,DONE,Сделать тестовые задачи для трекера,3
+5,SUBTASK,Тест функций,IN_PROGRESS,Оно работает?,3
+7,SUBTASK,Теоретическая часть,NEW,Начать делать тренажер,6
+1,TASK,Thinking in Java,IN_PROGRESS,Прочитать теорию
+2,TASK,C++,NEW,Начать изучать
+
+1,3,4
