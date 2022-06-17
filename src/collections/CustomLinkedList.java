@@ -35,7 +35,7 @@ public class CustomLinkedList {
             list.add(nextNode.data);
             nextNode = nextNode.next;
         }
-        return list;
+        return List.copyOf(list);
     }
 
     public void removeNode(int taskId) {

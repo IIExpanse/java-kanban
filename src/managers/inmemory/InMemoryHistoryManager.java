@@ -1,6 +1,7 @@
-package managers;
+package managers.inmemory;
 
 import collections.CustomLinkedList;
+import managers.HistoryManager;
 import tasks.Task;
 
 import java.util.List;
@@ -8,6 +9,9 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
 
     private final CustomLinkedList tasksHistory = new CustomLinkedList();
+
+    public InMemoryHistoryManager() {
+    }
 
     @Override
     public void add(Task task) {

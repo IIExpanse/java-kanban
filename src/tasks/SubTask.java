@@ -6,7 +6,7 @@ public class SubTask extends Task {
 
     private final int parentEpicId;
 
-    public SubTask(String title, String description, TaskStatuses status, int parentEpicId) {
+    public SubTask(String title, String description, TasksStatuses status, int parentEpicId) {
         super(title, description, status);
         this.parentEpicId = parentEpicId;
     }
@@ -35,7 +35,7 @@ public class SubTask extends Task {
         return "SubTask{" +
                 "id=" + id +
                 ",\n parentEpicId=" + parentEpicId +
-                ",\n title='" + title +
+                ",\n title='" + name +
                 ",\n description='" + descriptionSize +
                 ",\n status='" + status +
                 '}';
@@ -44,4 +44,5 @@ public class SubTask extends Task {
     public int getParentEpicId() {
         return parentEpicId;
     }
+
 }
