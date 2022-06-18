@@ -1,6 +1,7 @@
 package managers.inmemory;
 
 import managers.HistoryManager;
+import managers.Managers;
 import managers.TasksManager;
 import tasks.*;
 
@@ -11,7 +12,7 @@ public class InMemoryTasksManager implements TasksManager {
     protected final Map<Integer, Task> tasksList = new HashMap<>();
     protected final Map<Integer, Epic> epicsList = new HashMap<>();
     protected final Map<Integer, SubTask> subTasksList = new HashMap<>();
-    protected final HistoryManager historyManager = new InMemoryHistoryManager();
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
     protected int idCounter = 1;
 
     public InMemoryTasksManager() {
@@ -65,12 +66,14 @@ public class InMemoryTasksManager implements TasksManager {
     @Override
     public void clearSubTasksList() {
         for (SubTask subTask : subTasksList.values()) {
+            int subTaskId = subTask.getId();
             int parentEpicId = subTask.getParentEpicId();
 
             if (epicsList.containsKey(parentEpicId)) {
+                epicsList.get(parentEpicId).removeSubTask(subTaskId);
                 refreshEpicStatus(parentEpicId);
             }
-            historyManager.remove(subTask.getId());
+            historyManager.remove(subTaskId);
         }
         subTasksList.clear();
     }

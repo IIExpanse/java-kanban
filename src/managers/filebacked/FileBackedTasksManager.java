@@ -2,7 +2,7 @@ package managers.filebacked;
 
 import managers.HistoryManager;
 import managers.Managers;
-import managers.TasksTypes;
+import tasks.TasksTypes;
 import managers.inmemory.InMemoryTasksManager;
 import managers.TasksManager;
 import tasks.Epic;
@@ -13,11 +13,12 @@ import tasks.TasksStatuses;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBackedTasksManager extends InMemoryTasksManager implements TasksManager {
+public class FileBackedTasksManager extends InMemoryTasksManager {
 
     private final String TASK_FIELDS = "id,type,name,status,description,epic" + System.lineSeparator();
     private final File storage;
@@ -32,7 +33,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
 
     public static class Main {
 
-        public static final TasksManager manager = Managers.getFileBackedTasks("src/files/Tasks.csv");
+        public static final String FILE_PATH = "src/files/Tasks.csv";
+        public static final TasksManager manager = Managers.getFileBackedTasks(FILE_PATH);
 
         public static void main(String[] args) {
             TasksManager fileBackedManager;
@@ -41,6 +43,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             manager.getTask(1);
             manager.getEpic(3);
             manager.getSubTask(4);
+
             System.out.println("Начальный список тасков: ");
             printTaskList(manager.getTasksList());
             System.out.println("-------------------------");
@@ -57,7 +60,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             printTaskList(manager.getHistory());
             System.out.println("-------------------------");
 
-            fileBackedManager = FileBackedTasksManager.loadFromFile(new File("src/files/Tasks.csv"));
+            fileBackedManager = FileBackedTasksManager.loadFromFile(new File(FILE_PATH));
 
             System.out.println("Восстановленный список тасков: ");
             printTaskList(fileBackedManager.getTasksList());
@@ -123,11 +126,11 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         }
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
 
         try {
-            String data = Files.readString(file.toPath());
+            String data = Files.readString(file.toPath(), StandardCharsets.UTF_8);
             String[] lines = data.split(System.lineSeparator());
             int taskLinesLength = lines.length - 2;
             List<Integer> historyList;
@@ -170,7 +173,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             return manager;
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка при загрузке файла: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка при загрузке файла: " + e.getMessage(), e);
         }
     }
 
@@ -331,8 +334,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
         save();
     }
 
-    private void save() throws ManagerSaveException {
-        try (FileWriter fileWriter = new FileWriter(storage)) {
+    private void save() {
+        try (FileWriter fileWriter = new FileWriter(storage, StandardCharsets.UTF_8)) {
             StringBuilder stringBuilder = new StringBuilder(TASK_FIELDS);
             String taskLine;
 
@@ -356,7 +359,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager implements Task
             fileWriter.write(stringBuilder.toString());
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка при сохранении файла: " + e.getMessage());
+            throw new ManagerSaveException("Ошибка при сохранении файла: " + e.getMessage(), e);
         }
     }
 }
