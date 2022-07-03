@@ -1,5 +1,7 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.List;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ public class Epic extends Task {
     private final List<Integer> unfinishedTasksIds = new ArrayList<>();
 
     public Epic(String title, String description) {
-        super(title, description, TasksStatuses.NEW);
+        super(title, description, TasksStatuses.NEW, null, null);
     }
 
     @Override
@@ -19,7 +21,7 @@ public class Epic extends Task {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        return subTasksIds.equals(epic.subTasksIds) && unfinishedTasksIds.equals(epic.unfinishedTasksIds);
+        return Objects.equals(subTasksIds, epic.subTasksIds) && Objects.equals(unfinishedTasksIds, epic.unfinishedTasksIds);
     }
 
     @Override
@@ -39,6 +41,8 @@ public class Epic extends Task {
                 ",\n title='" + name +
                 ",\n description='" + descriptionSize +
                 ",\n status='" + status +
+                ",\n start time='" + startTime +
+                ",\n duration='" + duration +
                 ",\n subTasksList=" + subTasksIds +
                 ",\n unfinishedTasksIds=" + unfinishedTasksIds +
                 '}';
@@ -70,5 +74,13 @@ public class Epic extends Task {
 
     public void setStatus(TasksStatuses status) {
         this.status = status;
+    }
+
+    public void setEpicStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEpicDuration(Duration duration) {
+        this.duration = duration;
     }
 }

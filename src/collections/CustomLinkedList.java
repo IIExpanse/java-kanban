@@ -39,28 +39,30 @@ public class CustomLinkedList {
     }
 
     public void removeNode(int taskId) {
-        this.removeNode(map.get(taskId));
+        Node<Task> node = map.get(taskId);
+
+        if (node != null) {
+            this.removeNode(node);
+        }
     }
 
     private void removeNode(Node<Task> node) {
-        if (node != null) {
-            if (node.prev != null) {
-                node.prev.next = node.next;
-            } else {
-                head = node.next;
-            }
-
-            if (node.next != null) {
-                node.next.prev = node.prev;
-            } else {
-                tail = node.prev;
-            }
-
-            map.remove(node.data.getId());
-            node.prev = null;
-            node.data = null;
-            node.next = null;
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
         }
+
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+
+        map.remove(node.data.getId());
+        node.prev = null;
+        node.data = null;
+        node.next = null;
     }
 
     private void linkLast(Node<Task> newNode) {
