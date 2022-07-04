@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TasksManagerTest<T extends TasksManager> {
 
-    T manager;
+    public T manager;
 
     @Test
     public void getTasksListTest() {
@@ -53,7 +53,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         try {
@@ -89,7 +89,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task);
@@ -124,7 +124,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -144,7 +144,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task);
@@ -203,7 +203,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         try {
@@ -235,7 +235,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task);
@@ -288,7 +288,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -323,7 +323,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 31);
 
         assertThrows(ParentEpicNotPresentException.class, () -> manager.addNewSubTask(subTask));
@@ -336,7 +336,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task1);
@@ -349,7 +349,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Начать изучать",
                 TasksStatuses.NEW,
                 task1.getEndTime().plus(Duration.ofDays(1)),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.replaceTask(task1.getId(), task2);
@@ -369,7 +369,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task1);
@@ -395,7 +395,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         assertThrows(WrongTaskIdException.class, () -> manager.replaceTask(31, task));
     }
@@ -466,7 +466,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         SubTask subTask2 = new SubTask(
@@ -474,7 +474,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Начать делать тренажер",
                 TasksStatuses.NEW,
                 subTask1.getEndTime().plusDays(1),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
         try {
             manager.addNewSubTask(subTask1);
@@ -499,7 +499,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         try {
@@ -525,7 +525,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Начать делать тренажер",
                 TasksStatuses.NEW,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         assertThrows(WrongTaskIdException.class, () -> manager.replaceSubTask(31, subTask2));
@@ -538,7 +538,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task);
@@ -585,7 +585,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 LocalDateTime.now(),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         try {
@@ -606,7 +606,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task);
@@ -624,7 +624,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 task.getEndTime().plusDays(1),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epic.getId());
 
         try {
@@ -679,7 +679,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task);
@@ -695,7 +695,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Начать изучать",
                 TasksStatuses.NEW,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4));
+                4 * 24 * 60);
         try {
             manager.addNewTask(task);
         } catch (Exception e) {
@@ -716,7 +716,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -733,7 +733,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Оно работает?",
                 TasksStatuses.IN_PROGRESS,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -755,7 +755,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Теоретическая часть",
                 "Начать делать тренажер",
                 TasksStatuses.NEW, previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -804,7 +804,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
         SubTask subTask;
         Set<Task> sortedSet;
         LocalDateTime epicStartTime;
-        Duration epicDuration;
+        Integer epicDuration;
         LocalDateTime previousTaskEndTime = LocalDateTime.now();
 
         epicTask = new Epic(
@@ -817,7 +817,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -832,7 +832,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Оно работает?",
                 TasksStatuses.IN_PROGRESS,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -846,7 +846,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Теоретическая часть",
                 "Начать делать тренажер",
                 TasksStatuses.NEW, previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
@@ -857,7 +857,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
 
         sortedSet = manager.getPrioritizedTasks();
         epicStartTime = subTask.getEndTime();
-        epicDuration = Duration.ofDays(0);
+        epicDuration = 0;
 
         for (Task task : sortedSet) {
             LocalDateTime taskStartTime = task.getStartTime();
@@ -865,7 +865,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
             if (epicStartTime.isAfter(taskStartTime)) {
                 epicStartTime = taskStartTime;
             }
-            epicDuration = epicDuration.plus(task.getDuration());
+            epicDuration += task.getDuration();
         }
 
         assertTrue(epicStartTime.equals(epicTask.getStartTime())
@@ -881,7 +881,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
 
         sortedSet = manager.getPrioritizedTasks();
         epicStartTime = subTask.getEndTime();
-        epicDuration = Duration.ofDays(0);
+        epicDuration = 0;
 
         for (Task task : sortedSet) {
             LocalDateTime taskStartTime = task.getStartTime();
@@ -889,7 +889,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
             if (epicStartTime.isAfter(taskStartTime)) {
                 epicStartTime = taskStartTime;
             }
-            epicDuration = epicDuration.plus(task.getDuration());
+            epicDuration += task.getDuration();
         }
 
         assertTrue(epicStartTime.equals(epicTask.getStartTime())
@@ -912,7 +912,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask1);
@@ -927,7 +927,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Оно работает?",
                 TasksStatuses.NEW,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask2);
@@ -941,7 +941,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Теоретическая часть",
                 "Начать делать тренажер",
                 TasksStatuses.NEW, previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask3);
@@ -997,7 +997,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
         try {
             manager.addNewTask(task1);
         } catch (Exception e) {
@@ -1009,7 +1009,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Начать изучать",
                 TasksStatuses.NEW,
                 task1.getStartTime(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         try {
             manager.addNewTask(task2);
@@ -1027,7 +1027,7 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now().plusYears(2),
-                Duration.ofDays(4));
+                4 * 24 * 60);
 
         assertThrows(TaskOutOfPlannerBoundsException.class, () -> manager.addNewTask(task1));
     }

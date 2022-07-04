@@ -1,4 +1,4 @@
-package managers.filebacked;
+package managers.exceptions;
 
 public class ManagerSaveException extends RuntimeException {
 

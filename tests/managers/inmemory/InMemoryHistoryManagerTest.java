@@ -1,12 +1,11 @@
-package managers;
+package managers.inmemory;
 
-import managers.inmemory.InMemoryTasksManager;
+import managers.TasksManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 import tasks.TasksStatuses;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class InMemoryHistoryManagerTest {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
         try {
             manager.addNewTask(task);
             manager.getTask(task.getId());
@@ -51,7 +50,7 @@ public class InMemoryHistoryManagerTest {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
         try {
             manager.addNewTask(task);
             manager.getTask(task.getId());
@@ -71,7 +70,7 @@ public class InMemoryHistoryManagerTest {
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 LocalDateTime.now(),
-                Duration.ofDays(4));
+                4 * 24 * 60);
         try {
             manager.addNewTask(task);
             manager.getTask(task.getId());

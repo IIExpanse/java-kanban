@@ -1,6 +1,5 @@
 package tasks;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.List;
@@ -80,7 +79,7 @@ public class Epic extends Task {
         this.startTime = startTime;
     }
 
-    public void setEpicDuration(Duration duration) {
+    public void setEpicDuration(Integer duration) {
         this.duration = duration;
     }
 }

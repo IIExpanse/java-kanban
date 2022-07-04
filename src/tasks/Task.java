@@ -11,9 +11,9 @@ public class Task {
     protected TasksStatuses status;
     protected Integer id;
     protected LocalDateTime startTime;
-    protected Duration duration;
+    protected Integer duration;
 
-    public Task(String name, String description, TasksStatuses status, LocalDateTime startTime, Duration duration) {
+    public Task(String name, String description, TasksStatuses status, LocalDateTime startTime, Integer duration) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -76,7 +76,7 @@ public class Task {
         return startTime;
     }
 
-    public Duration getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
@@ -85,7 +85,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return this.startTime.plus(duration);
+        return this.startTime.plus(Duration.ofMinutes(duration));
     }
 }
 

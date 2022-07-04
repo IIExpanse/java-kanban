@@ -1,6 +1,7 @@
 package managers.filebacked;
 
 import managers.*;
+import managers.exceptions.ManagerSaveException;
 import managers.exceptions.ParentEpicNotPresentException;
 import managers.exceptions.TaskOutOfPlannerBoundsException;
 import managers.exceptions.WrongTaskIdException;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
+        int idCounter = 0;
 
         try {
             String data = Files.readString(file.toPath());
@@ -41,23 +42,28 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
             for (int i = 1; i < taskLinesLength; i++) {
                 Task newTask = FileBackedTasksManager.taskFromString(lines[i]);
+                int newTaskId = newTask.getId();
 
                 if (newTask instanceof Epic) {
-                    manager.epicsMap.put(newTask.getId(), (Epic) newTask);
+                    manager.epicsMap.put(newTaskId, (Epic) newTask);
 
                 } else if (newTask instanceof SubTask) {
                     SubTask subTask = (SubTask) newTask;
-                    int subTaskId = subTask.getId();
                     int parentEpicId = subTask.getParentEpicId();
 
-                    manager.subTasksMap.put(subTaskId, subTask);
-                    manager.epicsMap.get(parentEpicId).assignNewSubtask(subTaskId, subTask.getStatus());
+                    manager.subTasksMap.put(newTaskId, subTask);
+                    manager.epicsMap.get(parentEpicId).assignNewSubtask(newTaskId, subTask.getStatus());
                     manager.refreshEpicStatusAndTime(parentEpicId);
 
                 } else {
-                    manager.tasksMap.put(newTask.getId(), newTask);
+                    manager.tasksMap.put(newTaskId, newTask);
+                }
+
+                if (newTaskId > idCounter) {
+                    idCounter = newTaskId;
                 }
             }
+            manager.setIdCounter(idCounter + 1);
 
             if (lines.length > 0) {
                 historyList = FileBackedTasksManager.historyFromString(lines[lines.length - 1]);
@@ -125,7 +131,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                         taskData[4],
                         TasksStatuses.valueOf(taskData[3]),
                         LocalDateTime.parse(taskData[5]),
-                        Duration.parse(taskData[6]),
+                        Integer.parseInt(taskData[6]),
                         Integer.parseInt(taskData[7]));
                 break;
             default:
@@ -133,7 +139,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                         taskData[4],
                         TasksStatuses.valueOf(taskData[3]),
                         LocalDateTime.parse(taskData[5]),
-                        Duration.parse(taskData[6]));
+                        Integer.parseInt(taskData[6]));
         }
         newTask.setId(Integer.parseInt(taskData[0]));
 
@@ -167,6 +173,10 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             return idsParsed;
 
         } else return new ArrayList<>();
+    }
+
+    public void setIdCounter(int idCounter) {
+        this.idCounter = idCounter;
     }
 
     @Override

@@ -6,7 +6,6 @@ import managers.exceptions.TaskOutOfPlannerBoundsException;
 import managers.exceptions.WrongTaskIdException;
 import tasks.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -18,14 +17,13 @@ public class InMemoryTasksManager implements TasksManager {
     protected final Map<Integer, SubTask> subTasksMap = new HashMap<>();
     protected final HashMap<LocalDateTime, Boolean> tasksPlanner = new HashMap<>();
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
-    protected final Set<Task> tasksFilteredByTime;
+    protected final Set<Task> tasksFilteredByTime = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     protected int idCounter = 1;
 
     protected final int TASKS_PLANNER_INTERVAL_SIZE_MINUTES = 15;
     protected final int PLANNER_TIME_LIMIT_MINUTES = 60 * 24 * 365;
 
     public InMemoryTasksManager() {
-
         LocalDateTime startingInterval = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         startingInterval = startingInterval.withMinute(startingInterval.getMinute()
                 / TASKS_PLANNER_INTERVAL_SIZE_MINUTES
@@ -33,33 +31,10 @@ public class InMemoryTasksManager implements TasksManager {
 
         int intervalsAmount = PLANNER_TIME_LIMIT_MINUTES / TASKS_PLANNER_INTERVAL_SIZE_MINUTES;
 
-
         for (int i = 0; i < intervalsAmount; i++) {
             tasksPlanner.put(startingInterval, false);
             startingInterval = startingInterval.plusMinutes(TASKS_PLANNER_INTERVAL_SIZE_MINUTES);
         }
-
-        tasksFilteredByTime = new TreeSet<>((o1, o2) -> {
-            LocalDateTime o1Time = o1.getStartTime();
-            LocalDateTime o2Time = o2.getStartTime();
-
-            if ((o1Time != null) && (o2Time != null)) {
-                if (o1Time.isBefore(o2Time)) {
-                    return -1;
-
-                } else if (o2Time.isBefore(o1Time)) {
-                    return 1;
-
-                } else return 0;
-
-            } else if ((o1Time != null) || (o2Time != null)) {
-                if (o1Time != null) {
-                    return -1;
-
-                } else return 1;
-
-            } else return 0;
-        });
     }
 
     @Override
@@ -93,6 +68,7 @@ public class InMemoryTasksManager implements TasksManager {
     @Override
     public void clearTasksMap() {
         for (Task task : tasksMap.values()) {
+            tasksFilteredByTime.remove(task);
             historyManager.remove(task.getId());
         }
         tasksMap.clear();
@@ -117,6 +93,7 @@ public class InMemoryTasksManager implements TasksManager {
                 epicsMap.get(parentEpicId).removeSubTask(subTaskId);
                 refreshEpicStatusAndTime(parentEpicId);
             }
+            tasksFilteredByTime.remove(subTask);
             historyManager.remove(subTaskId);
         }
         subTasksMap.clear();
@@ -328,12 +305,12 @@ public class InMemoryTasksManager implements TasksManager {
         if (subTasksNumber != 0) {
             Task initialTask = subTasksMap.get(subTasksIds.get(0));
             LocalDateTime startTime = initialTask.getStartTime();
-            Duration duration = initialTask.getDuration();
+            int duration = initialTask.getDuration();
 
             for (int i = 1; i < subTasksNumber; i++) {
                 Task nextTask = subTasksMap.get(subTasksIds.get(i));
                 LocalDateTime nextTime = nextTask.getStartTime();
-                duration = duration.plus(nextTask.getDuration());
+                duration += nextTask.getDuration();
 
                 if (nextTime.isBefore(startTime)) {
                     startTime = nextTime;
@@ -359,7 +336,7 @@ public class InMemoryTasksManager implements TasksManager {
                 / TASKS_PLANNER_INTERVAL_SIZE_MINUTES
                 * TASKS_PLANNER_INTERVAL_SIZE_MINUTES);
 
-        int intervalsNumber = (int) task.getDuration().toMinutes() / TASKS_PLANNER_INTERVAL_SIZE_MINUTES;
+        int intervalsNumber = task.getDuration() / TASKS_PLANNER_INTERVAL_SIZE_MINUTES;
 
         if (tasksPlanner.containsKey(startingInterval)
                 && tasksPlanner.containsKey(startingInterval
@@ -390,7 +367,7 @@ public class InMemoryTasksManager implements TasksManager {
                 / TASKS_PLANNER_INTERVAL_SIZE_MINUTES
                 * TASKS_PLANNER_INTERVAL_SIZE_MINUTES);
 
-        int intervalsNumber = (int) task.getDuration().toMinutes() / TASKS_PLANNER_INTERVAL_SIZE_MINUTES;
+        int intervalsNumber = task.getDuration() / TASKS_PLANNER_INTERVAL_SIZE_MINUTES;
 
         for (int i = 0; i < intervalsNumber; i++) {
             tasksPlanner.put(startingInterval, false);

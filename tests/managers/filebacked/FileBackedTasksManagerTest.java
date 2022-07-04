@@ -1,6 +1,6 @@
-package managers;
+package managers.filebacked;
 
-import managers.filebacked.FileBackedTasksManager;
+import managers.TasksManagerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -11,9 +11,7 @@ import tasks.TasksStatuses;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,7 +40,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest<FileBackedTasks
                 "Прочитать теорию",
                 TasksStatuses.IN_PROGRESS,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4));
+                4 * 24 * 60);
         try {
             manager.addNewTask(task);
         } catch (Exception e) {
@@ -62,7 +60,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest<FileBackedTasks
                 "Сделать тестовые задачи для трекера",
                 TasksStatuses.DONE,
                 previousTaskEndTime.plus(Duration.ofDays(1)),
-                Duration.ofDays(4),
+                4 * 24 * 60,
                 epicTask.getId());
         try {
             manager.addNewSubTask(subTask);
