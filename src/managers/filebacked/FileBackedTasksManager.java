@@ -63,7 +63,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                     idCounter = newTaskId;
                 }
             }
-            manager.setIdCounter(idCounter + 1);
+            manager.idCounter = idCounter + 1;
 
             if (lines.length > 0) {
                 historyList = FileBackedTasksManager.historyFromString(lines[lines.length - 1]);
@@ -173,10 +173,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             return idsParsed;
 
         } else return new ArrayList<>();
-    }
-
-    public void setIdCounter(int idCounter) {
-        this.idCounter = idCounter;
     }
 
     @Override
