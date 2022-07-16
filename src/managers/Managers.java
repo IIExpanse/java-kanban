@@ -1,16 +1,18 @@
 package managers;
 
 import managers.filebacked.FileBackedTasksManager;
+import managers.http.HTTPTaskManager;
 import managers.inmemory.InMemoryHistoryManager;
-import managers.inmemory.InMemoryTasksManager;
+
+import java.io.IOException;
 
 public class Managers {
 
     private Managers() {
     }
 
-    public static TasksManager getDefault() {
-        return new InMemoryTasksManager();
+    public static TasksManager getDefault(String serverUrl) throws IOException, InterruptedException {
+        return new HTTPTaskManager(serverUrl);
     }
 
     public static TasksManager getFileBackedTasks(String filePath) {

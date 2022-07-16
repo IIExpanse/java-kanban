@@ -15,7 +15,7 @@ public interface TasksManager {
 
     List<SubTask> getSubTasksList();
 
-    List<SubTask> getEpicSubTasksList(int epicId);
+    List<SubTask> getEpicSubTasksList(int epicId) throws WrongTaskIdException;
 
     void clearTasksMap();
 

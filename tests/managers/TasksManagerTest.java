@@ -58,12 +58,12 @@ public abstract class TasksManagerTest<T extends TasksManager> {
 
         try {
             manager.addNewSubTask(subTask);
+            subTasksListOfEpic = manager.getEpicSubTasksList(epic.getId());
 
         } catch (Exception e) {
             throw new AssertionError(e.getMessage(), e);
         }
 
-        subTasksListOfEpic = manager.getEpicSubTasksList(epic.getId());
 
         assertEquals(List.of(subTask), subTasksListOfEpic);
     }
@@ -77,7 +77,11 @@ public abstract class TasksManagerTest<T extends TasksManager> {
                 "Закрыть ТЗ третьего спринта");
         manager.addNewEpic(epic);
 
-        subTasksListOfEpic = manager.getEpicSubTasksList(epic.getId());
+        try {
+            subTasksListOfEpic = manager.getEpicSubTasksList(epic.getId());
+        } catch (Exception e) {
+            throw new AssertionError(e.getMessage(), e);
+        }
 
         assertEquals(List.of(), subTasksListOfEpic);
     }

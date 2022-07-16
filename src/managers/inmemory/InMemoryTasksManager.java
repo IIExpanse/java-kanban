@@ -53,7 +53,7 @@ public class InMemoryTasksManager implements TasksManager {
     }
 
     @Override
-    public List<SubTask> getEpicSubTasksList(int epicId) {
+    public List<SubTask> getEpicSubTasksList(int epicId) throws WrongTaskIdException {
         Epic epic = epicsMap.get(epicId);
         List<SubTask> specificEpicSubtasks = new ArrayList<>();
 
@@ -61,6 +61,8 @@ public class InMemoryTasksManager implements TasksManager {
             for (int subTaskId : epic.getSubTasksIds()) {
                 specificEpicSubtasks.add(subTasksMap.get(subTaskId));
             }
+        } else {
+            throw new WrongTaskIdException("Эпик с Id '" + epicId + "' не найден при получении списка его задач.");
         }
         return List.copyOf(specificEpicSubtasks);
     }
@@ -185,7 +187,7 @@ public class InMemoryTasksManager implements TasksManager {
             }
 
             task.setId(id);
-            freeTimeIntervals(task);
+            changeTimeIntervals(task, false);
             addNewTask(task);
         }
     }
@@ -214,7 +216,7 @@ public class InMemoryTasksManager implements TasksManager {
             }
 
             subTask.setId(id);
-            freeTimeIntervals(subTask);
+            changeTimeIntervals(subTask, false);
             addNewSubTask(subTask);
         }
     }
@@ -225,7 +227,7 @@ public class InMemoryTasksManager implements TasksManager {
             Task task = tasksMap.get(taskId);
 
             tasksFilteredByTime.remove(task);
-            freeTimeIntervals(task);
+            changeTimeIntervals(task, false);
             tasksMap.remove(taskId);
             historyManager.remove(taskId);
 
@@ -259,7 +261,7 @@ public class InMemoryTasksManager implements TasksManager {
         int parentEpicId = subTask.getParentEpicId();
 
         tasksFilteredByTime.remove(subTask);
-        freeTimeIntervals(subTask);
+        changeTimeIntervals(subTask, false);
         subTasksMap.remove(subTaskId);
         historyManager.remove(subTaskId);
         epicsMap.get(parentEpicId).removeSubTask(subTaskId);
@@ -342,17 +344,18 @@ public class InMemoryTasksManager implements TasksManager {
                 && tasksPlanner.containsKey(startingInterval
                 .plusMinutes(TASKS_PLANNER_INTERVAL_SIZE_MINUTES * intervalsNumber))) {
 
+            LocalDateTime interval = startingInterval;
             for (int i = 0; i < intervalsNumber; i++) {
-                boolean isIntervalOccupied = tasksPlanner.get(startingInterval);
+                boolean isIntervalOccupied = tasksPlanner.get(interval);
 
                 if (!isIntervalOccupied) {
-                    tasksPlanner.put(startingInterval, true);
-                    startingInterval = startingInterval.plusMinutes(TASKS_PLANNER_INTERVAL_SIZE_MINUTES);
+                    interval = interval.plusMinutes(TASKS_PLANNER_INTERVAL_SIZE_MINUTES);
 
                 } else {
                     return false;
                 }
             }
+            changeTimeIntervals(task, true);
             return true;
 
         } else {
@@ -361,7 +364,7 @@ public class InMemoryTasksManager implements TasksManager {
         }
     }
 
-    protected void freeTimeIntervals(Task task) {
+    protected void changeTimeIntervals(Task task, boolean value) {
         LocalDateTime startingInterval = task.getStartTime().truncatedTo(ChronoUnit.MINUTES);
         startingInterval = startingInterval.withMinute(startingInterval.getMinute()
                 / TASKS_PLANNER_INTERVAL_SIZE_MINUTES
@@ -370,7 +373,7 @@ public class InMemoryTasksManager implements TasksManager {
         int intervalsNumber = task.getDuration() / TASKS_PLANNER_INTERVAL_SIZE_MINUTES;
 
         for (int i = 0; i < intervalsNumber; i++) {
-            tasksPlanner.put(startingInterval, false);
+            tasksPlanner.put(startingInterval, value);
             startingInterval = startingInterval.plusMinutes(TASKS_PLANNER_INTERVAL_SIZE_MINUTES);
         }
     }

@@ -8,10 +8,10 @@ import managers.exceptions.WrongTaskIdException;
 import tasks.*;
 import managers.inmemory.InMemoryTasksManager;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +20,18 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     private final static String TASK_FIELDS = "id,type,name,status,description,epic,startTime,duration"
             + System.lineSeparator();
-    private final File storage;
+    protected final String storagePath;
 
-    public FileBackedTasksManager(String filePath) {
-        this.storage = new File(filePath);
+    public FileBackedTasksManager(String storagePath) {
+        this.storagePath = storagePath;
     }
 
-    public FileBackedTasksManager(File file) {
-        this.storage = file;
-    }
-
-    public static FileBackedTasksManager loadFromFile(File file) {
-        FileBackedTasksManager manager = new FileBackedTasksManager(file);
+    public static FileBackedTasksManager load(String filePath) {
+        FileBackedTasksManager manager = new FileBackedTasksManager(filePath);
         int idCounter = 0;
 
         try {
-            String data = Files.readString(file.toPath());
+            String data = Files.readString(Path.of(filePath));
             String[] lines = data.split(System.lineSeparator());
             int taskLinesLength = lines.length - 2;
             List<Integer> historyList;
@@ -68,16 +64,17 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             if (lines.length > 0) {
                 historyList = FileBackedTasksManager.historyFromString(lines[lines.length - 1]);
 
-                for (int taskId : historyList) {
-                    if (manager.epicsMap.containsKey(taskId)) {
-                        manager.historyManager.add(manager.epicsMap.get(taskId));
+                for (int id : historyList) {
+                    Task task;
 
-                    } else if (manager.subTasksMap.containsKey(taskId)) {
-                        manager.historyManager.add(manager.subTasksMap.get(taskId));
-
+                    if (manager.tasksMap.containsKey(id)) {
+                        task = manager.tasksMap.get(id);
+                    } else if (manager.epicsMap.containsKey(id)) {
+                        task = manager.epicsMap.get(id);
                     } else {
-                        manager.historyManager.add(manager.tasksMap.get(taskId));
+                        task = manager.subTasksMap.get(id);
                     }
+                    manager.historyManager.add(task);
                 }
             }
             return manager;
@@ -270,8 +267,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         save();
     }
 
-    private void save() {
-        try (FileWriter fileWriter = new FileWriter(storage)) {
+    protected void save() {
+        try (FileWriter fileWriter = new FileWriter(storagePath)) {
             StringBuilder stringBuilder = new StringBuilder(TASK_FIELDS);
             String taskLine;
 

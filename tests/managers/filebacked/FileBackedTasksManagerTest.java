@@ -8,7 +8,6 @@ import tasks.SubTask;
 import tasks.Task;
 import tasks.TasksStatuses;
 
-import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -72,7 +71,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest<FileBackedTasks
         }
         history1 = manager.getHistory();
 
-        manager2 = FileBackedTasksManager.loadFromFile(new File(FILE_PATH));
+        manager2 = FileBackedTasksManager.load(FILE_PATH);
         history2 = manager2.getHistory();
 
         assertEquals(history1, history2);
@@ -90,7 +89,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest<FileBackedTasks
 
     @Test
     public void saveAndLoadEmptyManagerTest() {
-        FileBackedTasksManager.loadFromFile(new File(FILE_PATH));
+        FileBackedTasksManager.load(FILE_PATH);
     }
 
     @Test
@@ -100,7 +99,7 @@ public class FileBackedTasksManagerTest extends TasksManagerTest<FileBackedTasks
                 "Закрыть ТЗ третьего спринта");
         manager.addNewEpic(epic);
 
-        FileBackedTasksManager manager2 = FileBackedTasksManager.loadFromFile(new File(FILE_PATH));
+        FileBackedTasksManager manager2 = FileBackedTasksManager.load(FILE_PATH);
         Epic epic2;
 
         try {
