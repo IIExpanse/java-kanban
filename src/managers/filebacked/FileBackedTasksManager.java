@@ -116,14 +116,14 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         String[] taskData = taskLine.split(",");
         Task newTask;
 
-        switch (taskData[1]) {
-            case "EPIC":
+        switch (TasksTypes.valueOf(taskData[1])) {
+            case EPIC:
                 newTask = new Epic(
                         taskData[2],
                         taskData[4]);
 
                 break;
-            case "SUBTASK":
+            case SUBTASK:
                 newTask = new SubTask(taskData[2],
                         taskData[4],
                         TasksStatuses.valueOf(taskData[3]),

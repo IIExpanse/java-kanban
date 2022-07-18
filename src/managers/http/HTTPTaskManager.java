@@ -14,6 +14,8 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     private final KVTaskClient client;
     private final String managerServerKey;
+    private final Gson gson = new Gson();
+
 
     public HTTPTaskManager(String serverURL) throws IOException, InterruptedException {
         super(serverURL);
@@ -32,7 +34,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     @Override
     protected void save() {
         String serializedData;
-        Gson gson = new Gson();
 
         Task[] tasksArr = this.tasksMap.values().toArray(Task[]::new);
         Epic[] epicsArr = this.epicsMap.values().toArray(Epic[]::new);
@@ -44,7 +45,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
     }
 
     private void loadFromServer() {
-        Gson gson = new Gson();
         String serializedData = client.load(managerServerKey);
         if (serializedData == null) {
             return;
